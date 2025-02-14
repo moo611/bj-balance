@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.balance.mapper.BalancePerformanceMapper">
+
+    <resultMap type="com.example.balance.domain.BalancePerformance" id="BalancePerformanceResult">
+        <result property="id"    column="id"    />
+        <result property="outId"    column="out_id"    />
+        <result property="inId"    column="in_id"    />
+        <result property="performanceRe"    column="performance_re"    />
+        <result property="performanceInsulation"    column="performance_insulation"    />
+        <result property="performanceZero"    column="performance_zero"    />
+        <result property="performanceLoad"    column="performance_load"    />
+        <result property="performanceResult"    column="performance_result"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="balanceCode" column="balance_code"/>
+        <result property="balanceName" column="balance_name"/>
+    </resultMap>
+
+    <sql id="selectBalancePerformanceVo">
+        select id, out_id,in_id, performance_re, performance_insulation, performance_zero, performance_load, performance_result, del_flag, create_time, create_by, update_time, update_by,balance_code from balance_performance
+    </sql>
+
+    <select id="selectBalancePerformanceList" parameterType="com.example.balance.domain.BalancePerformance" resultMap="BalancePerformanceResult">
+        <include refid="selectBalancePerformanceVo"/>
+        <where>del_flag='0'
+            <if test="balanceCode != null  and balanceCode != ''"> and balance_code = #{balanceCode}</if>
+            <if test="outId != null  and outId != ''"> and out_id = #{outId}</if>
+            <if test="inId != null  and inId != ''"> and in_id = #{inId}</if>
+            <if test="performanceRe != null "> and performance_re = #{performanceRe}</if>
+            <if test="performanceInsulation != null "> and performance_insulation = #{performanceInsulation}</if>
+            <if test="performanceZero != null  and performanceZero != ''"> and performance_zero = #{performanceZero}</if>
+            <if test="performanceLoad != null  and performanceLoad != ''"> and performance_load = #{performanceLoad}</if>
+            <if test="performanceResult != null  and performanceResult != ''"> and performance_result = #{performanceResult}</if>
+        </where>
+    </select>
+
+    <select id="selectLatestPerformanceList" parameterType="com.example.balance.domain.req.BalancePerformanceListReq" resultMap="BalancePerformanceResult">
+
+        SELECT
+            bp.id,
+            bp.out_id,
+            bp.in_id,
+            bp.performance_re,
+            bp.performance_insulation,
+            bp.performance_zero,
+            bp.performance_load,
+            bp.performance_result,
+            bp.del_flag,
+            bp.create_time,
+            bp.create_by,
+            bp.update_time,
+            bp.update_by,
+            bp.balance_code,
+            bi.balance_name
+        FROM
+            balance_performance bp
+                JOIN ( SELECT balance_code, MAX( create_time ) AS latest_time FROM balance_performance WHERE del_flag = '0' GROUP BY balance_code ) latest_bp ON bp.balance_code = latest_bp.balance_code
+                AND bp.create_time = latest_bp.latest_time
+        left join balance_info bi on bp.balance_code = bi.balance_code
+        WHERE
+            bp.del_flag = '0'
+
+    </select>
+
+    <select id="selectBalancePerformanceById" parameterType="long" resultMap="BalancePerformanceResult">
+        <include refid="selectBalancePerformanceVo"/>
+        where del_flag='0' and id = #{id}
+    </select>
+    <select id="selectBalancePerformanceByBalance" resultMap="BalancePerformanceResult">
+        <include refid="selectBalancePerformanceVo"/>
+        <where>del_flag='0' and balance_code=#{balanceCode}
+            <if test="outId != null  and outId != ''"> and out_id = #{outId}</if>
+            <if test="inId != null  and inId != ''"> and in_id = #{inId}</if>
+
+        </where>
+    </select>
+
+
+    <insert id="insertBalancePerformance" parameterType="com.example.balance.domain.BalancePerformance" useGeneratedKeys="true" keyProperty="id">
+        insert into balance_performance
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="outId != null">out_id,</if>
+            <if test="inId != null">in_id,</if>
+            <if test="performanceRe != null">performance_re,</if>
+            <if test="performanceInsulation != null">performance_insulation,</if>
+            <if test="performanceZero != null">performance_zero,</if>
+            <if test="performanceLoad != null">performance_load,</if>
+            <if test="performanceResult != null">performance_result,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="balanceCode != null">balance_code,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="outId != null">#{outId},</if>
+            <if test="inId != null">#{inId},</if>
+            <if test="performanceRe != null">#{performanceRe},</if>
+            <if test="performanceInsulation != null">#{performanceInsulation},</if>
+            <if test="performanceZero != null">#{performanceZero},</if>
+            <if test="performanceLoad != null">#{performanceLoad},</if>
+            <if test="performanceResult != null">#{performanceResult},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="balanceCode != null">#{balanceCode},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBalancePerformance" parameterType="com.example.balance.domain.BalancePerformance">
+        update balance_performance
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="outId != null">out_id = #{outId},</if>
+            <if test="inId != null">in_id = #{inId},</if>
+            <if test="performanceRe != null">performance_re = #{performanceRe},</if>
+            <if test="performanceInsulation != null">performance_insulation = #{performanceInsulation},</if>
+            <if test="performanceZero != null">performance_zero = #{performanceZero},</if>
+            <if test="performanceLoad != null">performance_load = #{performanceLoad},</if>
+            <if test="performanceResult != null">performance_result = #{performanceResult},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="balanceCode != null">balance_code = #{balanceCode},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBalancePerformanceById" parameterType="long">
+        update balance_performance set del_flag='2' where id = #{id}
+    </delete>
+
+    <delete id="deleteBalancePerformanceByIds" parameterType="long">
+        update balance_performance set del_flag='2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

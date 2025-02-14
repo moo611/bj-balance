@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.balance.mapper.BalancePasterMapper">
+
+    <resultMap type="com.example.balance.domain.BalancePaster" id="BalancePasterResult">
+        <result property="id"    column="id"    />
+        <result property="balanceCode"    column="balance_code"    />
+        <result property="strainGaugeId"    column="strain_gauge_id"    />
+        <result property="bpasterTime"    column="bPaster_time"    />
+        <result property="bpasterPos"    column="bPaster_pos"    />
+        <result property="bprocessPhoto"    column="bProcess_photo"    />
+        <result property="bridgePressure"    column="bridge_pressure"    />
+        <result property="bprocessPerson"    column="bProcess_person"    />
+        <result property="tempCompensation"    column="temp_compensation"    />
+        <result property="bpasterPrcdata"    column="bPaster_prcData"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="strainGaugeType" column="strain_gauge_type"/>
+        <result property="strainGaugeNorm" column="strain_gauge_norm"/>
+        <result property="strainGaugeFactory" column="strain_gauge_factory"/>
+    </resultMap>
+
+    <sql id="selectBalancePasterVo">
+        select id, balance_code, strain_gauge_id, bPaster_time, bPaster_pos, bProcess_photo, bridge_pressure, bProcess_person, temp_compensation, bPaster_prcData, del_flag, create_time, create_by, update_time, update_by, strain_gauge_type,strain_gauge_norm,strain_gauge_factory from balance_paster
+    </sql>
+
+    <select id="selectBalancePasterList" parameterType="com.example.balance.domain.BalancePaster" resultMap="BalancePasterResult">
+        <include refid="selectBalancePasterVo"/>
+        <where>del_flag='0'
+            <if test="balanceCode != null  and balanceCode != ''"> and balance_code = #{balanceCode}</if>
+            <if test="strainGaugeId != null "> and strain_gauge_id = #{strainGaugeId}</if>
+            <if test="bpasterTime != null "> and bPaster_time = #{bpasterTime}</if>
+            <if test="bpasterPos != null  and bpasterPos != ''"> and bPaster_pos = #{bpasterPos}</if>
+            <if test="bprocessPhoto != null  and bprocessPhoto != ''"> and bProcess_photo = #{bprocessPhoto}</if>
+            <if test="bridgePressure != null "> and bridge_pressure = #{bridgePressure}</if>
+            <if test="bprocessPerson != null  and bprocessPerson != ''"> and bProcess_person = #{bprocessPerson}</if>
+            <if test="tempCompensation != null "> and temp_compensation = #{tempCompensation}</if>
+            <if test="bpasterPrcdata != null  and bpasterPrcdata != ''"> and bPaster_prcData = #{bpasterPrcdata}</if>
+        </where>
+    </select>
+
+    <select id="selectBalancePasterById" parameterType="long" resultMap="BalancePasterResult">
+        <include refid="selectBalancePasterVo"/>
+        where del_flag='0' and id = #{id}
+    </select>
+
+
+    <select id="selectBalancePasterByBalanceCode" parameterType="string" resultMap="BalancePasterResult">
+        <include refid="selectBalancePasterVo"/>
+        where del_flag='0' and balance_code = #{balanceCode}
+    </select>
+
+    <insert id="insertBalancePaster" parameterType="com.example.balance.domain.BalancePaster" useGeneratedKeys="true" keyProperty="id">
+        insert into balance_paster
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="balanceCode != null">balance_code,</if>
+            <if test="strainGaugeId != null">strain_gauge_id,</if>
+            <if test="bpasterTime != null">bPaster_time,</if>
+            <if test="bpasterPos != null">bPaster_pos,</if>
+            <if test="bprocessPhoto != null">bProcess_photo,</if>
+            <if test="bridgePressure != null">bridge_pressure,</if>
+            <if test="bprocessPerson != null">bProcess_person,</if>
+            <if test="tempCompensation != null">temp_compensation,</if>
+            <if test="bpasterPrcdata != null">bPaster_prcData,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="strainGaugeType != null">strain_gauge_type,</if>
+            <if test="strainGaugeNorm != null">strain_gauge_norm,</if>
+            <if test="strainGaugeFactory != null">strain_gauge_factory,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="balanceCode != null">#{balanceCode},</if>
+            <if test="strainGaugeId != null">#{strainGaugeId},</if>
+            <if test="bpasterTime != null">#{bpasterTime},</if>
+            <if test="bpasterPos != null">#{bpasterPos},</if>
+            <if test="bprocessPhoto != null">#{bprocessPhoto},</if>
+            <if test="bridgePressure != null">#{bridgePressure},</if>
+            <if test="bprocessPerson != null">#{bprocessPerson},</if>
+            <if test="tempCompensation != null">#{tempCompensation},</if>
+            <if test="bpasterPrcdata != null">#{bpasterPrcdata},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="strainGaugeType != null">#{strainGaugeType},</if>
+            <if test="strainGaugeNorm != null">#{strainGaugeNorm},</if>
+            <if test="strainGaugeFactory != null">#{strainGaugeFactory},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBalancePaster" parameterType="com.example.balance.domain.BalancePaster">
+        update balance_paster
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="balanceCode != null">balance_code = #{balanceCode},</if>
+            <if test="strainGaugeId != null">strain_gauge_id = #{strainGaugeId},</if>
+            <if test="bpasterTime != null">bPaster_time = #{bpasterTime},</if>
+            <if test="bpasterPos != null">bPaster_pos = #{bpasterPos},</if>
+            <if test="bprocessPhoto != null">bProcess_photo = #{bprocessPhoto},</if>
+            <if test="bridgePressure != null">bridge_pressure = #{bridgePressure},</if>
+            <if test="bprocessPerson != null">bProcess_person = #{bprocessPerson},</if>
+            <if test="tempCompensation != null">temp_compensation = #{tempCompensation},</if>
+            <if test="bpasterPrcdata != null">bPaster_prcData = #{bpasterPrcdata},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="strainGaugeType != null">strain_gauge_type = #{strainGaugeType},</if>
+            <if test="strainGaugeNorm != null">strain_gauge_norm = #{strainGaugeNorm},</if>
+            <if test="strainGaugeFactory != null">strain_gauge_factory = #{strainGaugeFactory},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBalancePasterById" parameterType="long">
+        update balance_paster set del_flag='2' where id = #{id}
+    </delete>
+
+    <delete id="deleteBalancePasterByIds" parameterType="long">
+        update balance_paster set del_flag='2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

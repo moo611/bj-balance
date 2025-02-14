@@ -1,0 +1,208 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.balance.mapper.BalanceInfoMapper">
+
+    <resultMap type="com.example.balance.domain.BalanceInfo" id="BalanceInfoResult">
+        <result property="balanceCode"    column="balance_code"    />
+        <result property="balanceType"    column="balance_type"    />
+        <result property="balanceClassify"    column="balance_classify"    />
+        <result property="balanceMaterial"    column="balance_material"    />
+        <result property="balanceSupport"    column="balance_support"    />
+        <result property="balanceInferface"    column="balance_inferface"    />
+        <result property="balanceDesigner"    column="balance_designer"    />
+        <result property="balanceDtime"    column="balance_dtime"    />
+        <result property="balanceFactory"    column="balance_factory"    />
+        <result property="balanceFtime"    column="balance_ftime"    />
+        <result property="balanceX"    column="balance_x"    />
+        <result property="balanceY"    column="balance_y"    />
+        <result property="balanceZ"    column="balance_z"    />
+        <result property="balanceMx"    column="balance_mx"    />
+        <result property="balanceMy"    column="balance_my"    />
+        <result property="balanceMz"    column="balance_mz"    />
+        <result property="balanceTnum"    column="balance_tnum"    />
+        <result property="balanceState"    column="balance_state"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="balanceName" column="balance_name"/>
+        <result property="status" column="status"/>
+    </resultMap>
+
+
+    <resultMap type="com.example.balance.domain.BalanceInfoVO" id="BalanceInfoResultVO">
+        <result property="balanceCode"    column="balance_code"    />
+        <result property="balanceType"    column="balance_type"    />
+        <result property="balanceClassify"    column="balance_classify"    />
+        <result property="balanceMaterial"    column="balance_material"    />
+        <result property="balanceSupport"    column="balance_support"    />
+        <result property="balanceInferface"    column="balance_inferface"    />
+        <result property="balanceDesigner"    column="balance_designer"    />
+        <result property="balanceDtime"    column="balance_dtime"    />
+        <result property="balanceFactory"    column="balance_factory"    />
+        <result property="balanceFtime"    column="balance_ftime"    />
+        <result property="balanceX"    column="balance_x"    />
+        <result property="balanceY"    column="balance_y"    />
+        <result property="balanceZ"    column="balance_z"    />
+        <result property="balanceMx"    column="balance_mx"    />
+        <result property="balanceMy"    column="balance_my"    />
+        <result property="balanceMz"    column="balance_mz"    />
+        <result property="balanceTnum"    column="balance_tnum"    />
+        <result property="balanceState"    column="balance_state"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="balanceName" column="balance_name"/>
+        <result property="status" column="status"/>
+        <result property="sizeX" column="size_x"/>
+        <result property="sizeY" column="size_y"/>
+        <result property="sizeZ" column="size_z"/>
+    </resultMap>
+
+
+    <sql id="selectBalanceInfoVo">
+        select balance_code,balance_name, balance_type, balance_classify, balance_material, balance_support, balance_inferface, balance_designer, balance_dtime, balance_factory, balance_ftime, balance_x, balance_y, balance_z, balance_mx, balance_my, balance_mz, balance_tnum, balance_state, del_flag, create_time, create_by, update_time, update_by,status from balance_info
+    </sql>
+
+    <select id="selectBalanceInfoList" parameterType="com.example.balance.domain.BalanceInfo" resultMap="BalanceInfoResult">
+        <include refid="selectBalanceInfoVo"/>
+        <where>del_flag='0'
+            <if test="balanceType != null  and balanceType != ''"> and balance_type = #{balanceType}</if>
+            <if test="balanceClassify != null  and balanceClassify != ''"> and balance_classify = #{balanceClassify}</if>
+            <if test="balanceMaterial != null  and balanceMaterial != ''"> and balance_material = #{balanceMaterial}</if>
+            <if test="balanceSupport != null "> and balance_support = #{balanceSupport}</if>
+            <if test="balanceInferface != null  and balanceInferface != ''"> and balance_inferface = #{balanceInferface}</if>
+            <if test="balanceDesigner != null  and balanceDesigner != ''"> and balance_designer = #{balanceDesigner}</if>
+            <if test="balanceDtime != null "> and balance_dtime = #{balanceDtime}</if>
+            <if test="balanceFactory != null  and balanceFactory != ''"> and balance_factory = #{balanceFactory}</if>
+            <if test="balanceFtime != null "> and balance_ftime = #{balanceFtime}</if>
+            <if test="balanceX != null "> and balance_x = #{balanceX}</if>
+            <if test="balanceY != null "> and balance_y = #{balanceY}</if>
+            <if test="balanceZ != null "> and balance_z = #{balanceZ}</if>
+            <if test="balanceMx != null "> and balance_mx = #{balanceMx}</if>
+            <if test="balanceMy != null "> and balance_my = #{balanceMy}</if>
+            <if test="balanceMz != null "> and balance_mz = #{balanceMz}</if>
+            <if test="balanceTnum != null "> and balance_tnum = #{balanceTnum}</if>
+            <if test="balanceState != null  and balanceState != ''"> and balance_state = #{balanceState}</if>
+        </where>
+        order by create_time desc
+    </select>
+
+    <select id="selectBalanceInfoByBalanceCode" parameterType="string" resultMap="BalanceInfoResult">
+        <include refid="selectBalanceInfoVo"/>
+        where del_flag='0' and balance_code = #{balanceCode}
+    </select>
+
+    <select id="selectBalanceInfoVOList" resultMap="BalanceInfoResultVO">
+        select bi.balance_code,bi.balance_name, bi.balance_type, bi.balance_classify, bi.balance_material, bi.balance_support, bi.balance_inferface, bi.balance_designer, bi.balance_dtime, bi.balance_factory, bi.balance_ftime, bi.balance_x, bi.balance_y, bi.balance_z, bi.balance_mx, bi.balance_my, bi.balance_mz, bi.balance_tnum, bi.balance_state, bi.del_flag, bi.create_time,
+               bi.create_by, bi.update_time, bi.update_by,bi.status,bz.size_x,bz.size_y,bz.size_z from balance_info bi
+        left join balance_size bz on bi.balance_code = bz.balance_code
+        where bi.del_flag='0'
+
+    </select>
+
+    <insert id="insertBalanceInfo" parameterType="com.example.balance.domain.BalanceInfo">
+        insert into balance_info
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="balanceCode != null">balance_code,</if>
+            <if test="balanceType != null">balance_type,</if>
+            <if test="balanceClassify != null">balance_classify,</if>
+            <if test="balanceMaterial != null">balance_material,</if>
+            <if test="balanceSupport != null">balance_support,</if>
+            <if test="balanceInferface != null">balance_inferface,</if>
+            <if test="balanceDesigner != null">balance_designer,</if>
+            <if test="balanceDtime != null">balance_dtime,</if>
+            <if test="balanceFactory != null">balance_factory,</if>
+            <if test="balanceFtime != null">balance_ftime,</if>
+            <if test="balanceX != null">balance_x,</if>
+            <if test="balanceY != null">balance_y,</if>
+            <if test="balanceZ != null">balance_z,</if>
+            <if test="balanceMx != null">balance_mx,</if>
+            <if test="balanceMy != null">balance_my,</if>
+            <if test="balanceMz != null">balance_mz,</if>
+            <if test="balanceTnum != null">balance_tnum,</if>
+            <if test="balanceState != null">balance_state,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="balanceName != null">balance_name,</if>
+            <if test="status != null">status,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="balanceCode != null">#{balanceCode},</if>
+            <if test="balanceType != null">#{balanceType},</if>
+            <if test="balanceClassify != null">#{balanceClassify},</if>
+            <if test="balanceMaterial != null">#{balanceMaterial},</if>
+            <if test="balanceSupport != null">#{balanceSupport},</if>
+            <if test="balanceInferface != null">#{balanceInferface},</if>
+            <if test="balanceDesigner != null">#{balanceDesigner},</if>
+            <if test="balanceDtime != null">#{balanceDtime},</if>
+            <if test="balanceFactory != null">#{balanceFactory},</if>
+            <if test="balanceFtime != null">#{balanceFtime},</if>
+            <if test="balanceX != null">#{balanceX},</if>
+            <if test="balanceY != null">#{balanceY},</if>
+            <if test="balanceZ != null">#{balanceZ},</if>
+            <if test="balanceMx != null">#{balanceMx},</if>
+            <if test="balanceMy != null">#{balanceMy},</if>
+            <if test="balanceMz != null">#{balanceMz},</if>
+            <if test="balanceTnum != null">#{balanceTnum},</if>
+            <if test="balanceState != null">#{balanceState},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="balanceName != null">#{balanceName},</if>
+            <if test="status != null">#{status},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBalanceInfo" parameterType="com.example.balance.domain.BalanceInfo">
+        update balance_info
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="balanceType != null">balance_type = #{balanceType},</if>
+            <if test="balanceClassify != null">balance_classify = #{balanceClassify},</if>
+            <if test="balanceMaterial != null">balance_material = #{balanceMaterial},</if>
+            <if test="balanceSupport != null">balance_support = #{balanceSupport},</if>
+            <if test="balanceInferface != null">balance_inferface = #{balanceInferface},</if>
+            <if test="balanceDesigner != null">balance_designer = #{balanceDesigner},</if>
+            <if test="balanceDtime != null">balance_dtime = #{balanceDtime},</if>
+            <if test="balanceFactory != null">balance_factory = #{balanceFactory},</if>
+            <if test="balanceFtime != null">balance_ftime = #{balanceFtime},</if>
+            <if test="balanceX != null">balance_x = #{balanceX},</if>
+            <if test="balanceY != null">balance_y = #{balanceY},</if>
+            <if test="balanceZ != null">balance_z = #{balanceZ},</if>
+            <if test="balanceMx != null">balance_mx = #{balanceMx},</if>
+            <if test="balanceMy != null">balance_my = #{balanceMy},</if>
+            <if test="balanceMz != null">balance_mz = #{balanceMz},</if>
+            <if test="balanceTnum != null">balance_tnum = #{balanceTnum},</if>
+            <if test="balanceState != null">balance_state = #{balanceState},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="balanceName != null">balance_name = #{balanceName},</if>
+            <if test="status != null">status = #{status},</if>
+        </trim>
+        where balance_code = #{balanceCode}
+    </update>
+
+    <delete id="deleteBalanceInfoByBalanceCode" parameterType="string">
+        update balance_info set del_flag='2' where balance_code = #{balanceCode}
+    </delete>
+
+    <delete id="deleteBalanceInfoByBalanceCodes" parameterType="string">
+        update balance_info set del_flag='2' where balance_code in
+        <foreach item="balanceCode" collection="array" open="(" separator="," close=")">
+            #{balanceCode}
+        </foreach>
+    </delete>
+</mapper>

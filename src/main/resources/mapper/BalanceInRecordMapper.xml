@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.balance.mapper.BalanceInRecordMapper">
+
+    <resultMap type="com.example.balance.domain.BalanceInRecord" id="BalanceInRecordResult">
+        <result property="id" column="id"/>
+        <result property="balanceCode" column="balance_code"/>
+        <result property="balanceName" column="balance_name"/>
+        <result property="useState" column="use_state"/>
+        <result property="evaluation" column="evaluation"/>
+        <result property="pName" column="p_name"/>
+        <result property="delFlag" column="del_flag"/>
+        <result property="createTime" column="create_time"/>
+        <result property="createBy" column="create_by"/>
+        <result property="updateTime" column="update_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="duration" column="duration"/>
+        <result property="bus" column="bus"/>
+    </resultMap>
+
+    <sql id="selectBalanceInRecordVo">
+        select id,
+               balance_code,
+               balance_name,
+               use_state,
+               evaluation,
+               p_name,
+               del_flag,
+               create_time,
+               create_by,
+               update_time,
+               update_by,
+               duration,
+               bus
+        from balance_in_record
+    </sql>
+
+    <select id="selectBalanceInRecordList" parameterType="com.example.balance.domain.BalanceInRecord"
+            resultMap="BalanceInRecordResult">
+        select a.id, a.balance_code, b.balance_name,a.use_state, a.evaluation, a.p_name, a.del_flag, a.create_time,
+        a.create_by, a.update_time, a.update_by, a.duration, a.bus from balance_in_record a
+        left join balance_info b on a.balance_code = b.balance_code
+        <where>a.del_flag='0'
+            <if test="balanceCode != null  and balanceCode != ''">and a.balance_code = #{balanceCode}</if>
+            <if test="useState != null  and useState != ''">and a.use_state = #{useState}</if>
+            <if test="evaluation != null  and evaluation != ''">and a.evaluation = #{evaluation}</if>
+            <if test="pName != null  and pName != ''">and a.p_name like concat('%', #{pName}, '%')</if>
+        </where>
+        order by a.create_time desc
+    </select>
+    <select id="selectBusList" parameterType="string" resultType="string">
+        select bus
+        from balance_in_record
+        where del_flag = '0'
+          and balance_code = #{balanceCode}
+    </select>
+
+
+    <select id="selectBalanceInRecordById" parameterType="long" resultMap="BalanceInRecordResult">
+        <include refid="selectBalanceInRecordVo"/>
+        where del_flag='0' and id = #{id}
+    </select>
+
+    <insert id="insertBalanceInRecord" parameterType="com.example.balance.domain.BalanceInRecord"
+            useGeneratedKeys="true" keyProperty="id">
+        insert into balance_in_record
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="balanceCode != null">balance_code,</if>
+            <if test="useState != null">use_state,</if>
+            <if test="evaluation != null">evaluation,</if>
+            <if test="pName != null">p_name,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="duration != null">duration,</if>
+            <if test="bus != null">bus,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="balanceCode != null">#{balanceCode},</if>
+            <if test="useState != null">#{useState},</if>
+            <if test="evaluation != null">#{evaluation},</if>
+            <if test="pName != null">#{pName},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="duration != null">#{duration},</if>
+            <if test="bus != null">#{bus},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBalanceInRecord" parameterType="com.example.balance.domain.BalanceInRecord">
+        update balance_in_record
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="balanceCode != null">balance_code = #{balanceCode},</if>
+            <if test="useState != null">use_state = #{useState},</if>
+            <if test="evaluation != null">evaluation = #{evaluation},</if>
+            <if test="pName != null">p_name = #{pName},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="duration != null">duration = #{duration},</if>
+            <if test="bus != null">bus = #{bus},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBalanceInRecordById" parameterType="long">
+        update balance_in_record
+        set del_flag='2'
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteBalanceInRecordByIds" parameterType="long">
+        update balance_in_record set del_flag='2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <select id="countBalanceInRecord" parameterType="string" resultType="int">
+        select count(*)
+        from balance_in_record
+        where del_flag = '0'
+          and balance_code = #{balanceCode}
+    </select>
+
+    <select id="selectCount" parameterType="string" resultMap="BalanceInRecordResult">
+
+        SELECT bir.id,
+               bir.balance_code,
+               bir.duration,
+               bir.bus
+        FROM balance_in_record bir
+                 JOIN (SELECT bus, max(create_time) create_time
+                       from balance_in_record
+                       WHERE del_flag = '0'
+                         AND balance_code = #{balanceCode}
+                       GROUP BY bus) latest
+                      ON bir.bus = latest.bus and bir.create_time = latest.create_time
+    </select>
+
+</mapper>

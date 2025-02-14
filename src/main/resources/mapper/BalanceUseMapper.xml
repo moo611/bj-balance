@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.balance.mapper.BalanceUseMapper">
+
+    <resultMap type="com.example.balance.domain.BalanceUse" id="BalanceUseResult">
+        <result property="id"    column="id"    />
+        <result property="outId"    column="out_id"    />
+        <result property="testType"    column="test_type"    />
+        <result property="support"    column="support"    />
+        <result property="mdl"    column="mdl"    />
+        <result property="person"    column="person"    />
+        <result property="ctime"    column="ctime"    />
+        <result property="useTime"    column="use_time"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="balanceCode" column="balance_code"/>
+    </resultMap>
+
+    <sql id="selectBalanceUseVo">
+        select id, out_id, test_type, support, mdl, person, ctime, use_time, del_flag, create_time, create_by, update_time, update_by,balance_code from balance_use
+    </sql>
+
+    <select id="selectBalanceUseList" parameterType="com.example.balance.domain.BalanceUse" resultMap="BalanceUseResult">
+        <include refid="selectBalanceUseVo"/>
+        <where>del_flag='0'
+            <if test="outId != null "> and out_id = #{outId}</if>
+            <if test="testType != null  and testType != ''"> and test_type = #{testType}</if>
+            <if test="support != null  and support != ''"> and support = #{support}</if>
+            <if test="mdl != null  and mdl != ''"> and mdl = #{mdl}</if>
+            <if test="person != null  and person != ''"> and person = #{person}</if>
+            <if test="ctime != null "> and ctime = #{ctime}</if>
+            <if test="useTime != null  and useTime != ''"> and use_time = #{useTime}</if>
+        </where>
+    </select>
+
+    <select id="selectBalanceUseById" parameterType="long" resultMap="BalanceUseResult">
+        <include refid="selectBalanceUseVo"/>
+        where del_flag='0' and id = #{id}
+    </select>
+
+
+    <select id="selectBalanceUseByBalance" resultMap="BalanceUseResult">
+        <include refid="selectBalanceUseVo"/>
+        where del_flag='0' and out_id = #{outId} and balance_code = #{balanceCode}
+    </select>
+    <insert id="insertBalanceUse" parameterType="com.example.balance.domain.BalanceUse" useGeneratedKeys="true" keyProperty="id">
+        insert into balance_use
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="outId != null">out_id,</if>
+            <if test="testType != null">test_type,</if>
+            <if test="support != null">support,</if>
+            <if test="mdl != null">mdl,</if>
+            <if test="person != null">person,</if>
+            <if test="ctime != null">ctime,</if>
+            <if test="useTime != null">use_time,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="balanceCode != null">balance_code,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="outId != null">#{outId},</if>
+            <if test="testType != null">#{testType},</if>
+            <if test="support != null">#{support},</if>
+            <if test="mdl != null">#{mdl},</if>
+            <if test="person != null">#{person},</if>
+            <if test="ctime != null">#{ctime},</if>
+            <if test="useTime != null">#{useTime},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="balanceCode != null">#{balanceCode},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBalanceUse" parameterType="com.example.balance.domain.BalanceUse">
+        update balance_use
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="outId != null">out_id = #{outId},</if>
+            <if test="testType != null">test_type = #{testType},</if>
+            <if test="support != null">support = #{support},</if>
+            <if test="mdl != null">mdl = #{mdl},</if>
+            <if test="person != null">person = #{person},</if>
+            <if test="ctime != null">ctime = #{ctime},</if>
+            <if test="useTime != null">use_time = #{useTime},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="balanceCode != null">balance_code = #{balanceCode},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBalanceUseById" parameterType="long">
+        update balance_use set del_flag='2' where id = #{id}
+    </delete>
+
+    <delete id="deleteBalanceUseByIds" parameterType="long">
+        update balance_use set del_flag='2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

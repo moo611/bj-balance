@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.balance.mapper.BalanceCalibrationMapper">
+
+    <resultMap type="com.example.balance.domain.BalanceCalibration" id="BalanceCalibrationResult">
+        <result property="bcalibrationCode"    column="bCalibration_code"    />
+        <result property="balanceCode"    column="balance_code"    />
+        <result property="bcalibrationName"    column="bCalibration_name"    />
+        <result property="bcalibrationTime"    column="bCalibration_time"    />
+        <result property="bcalibrationFile"    column="bCalibration_file"    />
+        <result property="bcalibrationVersion"    column="bCalibration_version"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBalanceCalibrationVo">
+        select bCalibration_code, balance_code, bCalibration_name, bCalibration_time, bCalibration_file, bCalibration_version, del_flag, create_time, create_by, update_time, update_by from balance_calibration
+    </sql>
+
+    <select id="selectBalanceCalibrationList" parameterType="com.example.balance.domain.BalanceCalibration" resultMap="BalanceCalibrationResult">
+        <include refid="selectBalanceCalibrationVo"/>
+        <where>del_flag='0'
+            <if test="balanceCode != null  and balanceCode != ''"> and balance_code = #{balanceCode}</if>
+            <if test="bcalibrationName != null  and bcalibrationName != ''"> and bCalibration_name like concat('%', #{bcalibrationName}, '%')</if>
+            <if test="bcalibrationTime != null "> and bCalibration_time = #{bcalibrationTime}</if>
+            <if test="bcalibrationFile != null  and bcalibrationFile != ''"> and bCalibration_file = #{bcalibrationFile}</if>
+            <if test="bcalibrationVersion != null  and bcalibrationVersion != ''"> and bCalibration_version = #{bcalibrationVersion}</if>
+        </where>
+    </select>
+
+    <select id="selectBalanceCalibrationByBcalibrationCode" parameterType="string" resultMap="BalanceCalibrationResult">
+        <include refid="selectBalanceCalibrationVo"/>
+        where del_flag='0' and bCalibration_code = #{bcalibrationCode}
+    </select>
+
+
+    <select id="selectBalanceCalibrationByBalanceCode" parameterType="string" resultMap="BalanceCalibrationResult">
+        <include refid="selectBalanceCalibrationVo"/>
+        where del_flag='0' and balance_code = #{balanceCode}
+    </select>
+
+    <insert id="insertBalanceCalibration" parameterType="com.example.balance.domain.BalanceCalibration">
+        insert into balance_calibration
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bcalibrationCode != null">bCalibration_code,</if>
+            <if test="balanceCode != null">balance_code,</if>
+            <if test="bcalibrationName != null">bCalibration_name,</if>
+            <if test="bcalibrationTime != null">bCalibration_time,</if>
+            <if test="bcalibrationFile != null">bCalibration_file,</if>
+            <if test="bcalibrationVersion != null">bCalibration_version,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bcalibrationCode != null">#{bcalibrationCode},</if>
+            <if test="balanceCode != null">#{balanceCode},</if>
+            <if test="bcalibrationName != null">#{bcalibrationName},</if>
+            <if test="bcalibrationTime != null">#{bcalibrationTime},</if>
+            <if test="bcalibrationFile != null">#{bcalibrationFile},</if>
+            <if test="bcalibrationVersion != null">#{bcalibrationVersion},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBalanceCalibration" parameterType="com.example.balance.domain.BalanceCalibration">
+        update balance_calibration
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="balanceCode != null">balance_code = #{balanceCode},</if>
+            <if test="bcalibrationName != null">bCalibration_name = #{bcalibrationName},</if>
+            <if test="bcalibrationTime != null">bCalibration_time = #{bcalibrationTime},</if>
+            <if test="bcalibrationFile != null">bCalibration_file = #{bcalibrationFile},</if>
+            <if test="bcalibrationVersion != null">bCalibration_version = #{bcalibrationVersion},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where bCalibration_code = #{bcalibrationCode}
+    </update>
+
+    <delete id="deleteBalanceCalibrationByBcalibrationCode" parameterType="string">
+        update balance_calibration set del_flag='2' where bCalibration_code = #{bcalibrationCode}
+    </delete>
+
+    <delete id="deleteBalanceCalibrationByBcalibrationCodes" parameterType="string">
+        update balance_calibration set del_flag='2' where bCalibration_code in
+        <foreach item="bcalibrationCode" collection="array" open="(" separator="," close=")">
+            #{bcalibrationCode}
+        </foreach>
+    </delete>
+</mapper>

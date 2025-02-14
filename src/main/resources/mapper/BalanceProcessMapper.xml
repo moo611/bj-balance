@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.balance.mapper.BalanceProcessMapper">
+
+    <resultMap type="com.example.balance.domain.BalanceProcess" id="BalanceProcessResult">
+        <result property="id"    column="id"    />
+        <result property="balanceCode"    column="balance_code"    />
+        <result property="bprocessMaterials"    column="bProcess_materials"    />
+        <result property="bprocessFactory"    column="bProcess_factory"    />
+        <result property="bprocessCtime"    column="bProcess_ctime"    />
+        <result property="bprocessPhoto"    column="bProcess_photo"    />
+        <result property="balanceFile"    column="balance_file"    />
+        <result property="bprocessAgreement"    column="bProcess_agreement"    />
+        <result property="bprocessCraft"    column="bProcess_craft"    />
+        <result property="qualityInspection"    column="quality_inspection"    />
+        <result property="contractAcceptance"    column="contract_acceptance"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBalanceProcessVo">
+        select id, balance_code, bProcess_materials, bProcess_factory, bProcess_ctime, bProcess_photo, balance_file, bProcess_agreement, bProcess_craft, quality_inspection, contract_acceptance, del_flag, create_time, create_by, update_time, update_by from balance_process
+    </sql>
+
+    <select id="selectBalanceProcessList" parameterType="com.example.balance.domain.BalanceProcess" resultMap="BalanceProcessResult">
+        <include refid="selectBalanceProcessVo"/>
+        <where>del_flag='0'
+            <if test="balanceCode != null  and balanceCode != ''"> and balance_code = #{balanceCode}</if>
+            <if test="bprocessMaterials != null  and bprocessMaterials != ''"> and bProcess_materials = #{bprocessMaterials}</if>
+            <if test="bprocessFactory != null  and bprocessFactory != ''"> and bProcess_factory = #{bprocessFactory}</if>
+            <if test="bprocessCtime != null "> and bProcess_ctime = #{bprocessCtime}</if>
+            <if test="bprocessPhoto != null "> and bProcess_photo = #{bprocessPhoto}</if>
+            <if test="balanceFile != null "> and balance_file = #{balanceFile}</if>
+            <if test="bprocessAgreement != null "> and bProcess_agreement = #{bprocessAgreement}</if>
+            <if test="bprocessCraft != null  and bprocessCraft != ''"> and bProcess_craft = #{bprocessCraft}</if>
+            <if test="qualityInspection != null "> and quality_inspection = #{qualityInspection}</if>
+            <if test="contractAcceptance != null "> and contract_acceptance = #{contractAcceptance}</if>
+        </where>
+    </select>
+
+    <select id="selectBalanceProcessById" parameterType="long" resultMap="BalanceProcessResult">
+        <include refid="selectBalanceProcessVo"/>
+        where del_flag='0' and id = #{id}
+    </select>
+
+
+    <select id="selectBalanceProcessByBalanceCode" parameterType="string" resultMap="BalanceProcessResult">
+        <include refid="selectBalanceProcessVo"/>
+        where del_flag='0' and balance_code = #{balanceCode}
+    </select>
+    <insert id="insertBalanceProcess" parameterType="com.example.balance.domain.BalanceProcess" useGeneratedKeys="true" keyProperty="id">
+        insert into balance_process
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="balanceCode != null">balance_code,</if>
+            <if test="bprocessMaterials != null">bProcess_materials,</if>
+            <if test="bprocessFactory != null">bProcess_factory,</if>
+            <if test="bprocessCtime != null">bProcess_ctime,</if>
+            <if test="bprocessPhoto != null">bProcess_photo,</if>
+            <if test="balanceFile != null">balance_file,</if>
+            <if test="bprocessAgreement != null">bProcess_agreement,</if>
+            <if test="bprocessCraft != null">bProcess_craft,</if>
+            <if test="qualityInspection != null">quality_inspection,</if>
+            <if test="contractAcceptance != null">contract_acceptance,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="balanceCode != null">#{balanceCode},</if>
+            <if test="bprocessMaterials != null">#{bprocessMaterials},</if>
+            <if test="bprocessFactory != null">#{bprocessFactory},</if>
+            <if test="bprocessCtime != null">#{bprocessCtime},</if>
+            <if test="bprocessPhoto != null">#{bprocessPhoto},</if>
+            <if test="balanceFile != null">#{balanceFile},</if>
+            <if test="bprocessAgreement != null">#{bprocessAgreement},</if>
+            <if test="bprocessCraft != null">#{bprocessCraft},</if>
+            <if test="qualityInspection != null">#{qualityInspection},</if>
+            <if test="contractAcceptance != null">#{contractAcceptance},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBalanceProcess" parameterType="com.example.balance.domain.BalanceProcess">
+        update balance_process
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="balanceCode != null">balance_code = #{balanceCode},</if>
+            <if test="bprocessMaterials != null">bProcess_materials = #{bprocessMaterials},</if>
+            <if test="bprocessFactory != null">bProcess_factory = #{bprocessFactory},</if>
+            <if test="bprocessCtime != null">bProcess_ctime = #{bprocessCtime},</if>
+            <if test="bprocessPhoto != null">bProcess_photo = #{bprocessPhoto},</if>
+            <if test="balanceFile != null">balance_file = #{balanceFile},</if>
+            <if test="bprocessAgreement != null">bProcess_agreement = #{bprocessAgreement},</if>
+            <if test="bprocessCraft != null">bProcess_craft = #{bprocessCraft},</if>
+            <if test="qualityInspection != null">quality_inspection = #{qualityInspection},</if>
+            <if test="contractAcceptance != null">contract_acceptance = #{contractAcceptance},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBalanceProcessById" parameterType="long">
+        update balance_process set del_flag='2' where id = #{id}
+    </delete>
+
+    <delete id="deleteBalanceProcessByIds" parameterType="long">
+        update balance_process set del_flag='2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

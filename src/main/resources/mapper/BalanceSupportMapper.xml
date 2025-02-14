@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.balance.mapper.BalanceSupportMapper">
+
+    <resultMap type="com.example.balance.domain.BalanceSupport" id="BalanceSupportResult">
+        <result property="id"    column="id"    />
+        <result property="balanceCode"    column="balance_code"    />
+        <result property="supportType"    column="support_type"    />
+        <result property="supportName"    column="support_name"    />
+        <result property="supportPic"    column="support_pic"    />
+        <result property="supportAng"    column="support_ang"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBalanceSupportVo">
+        select id, balance_code, support_type, support_name, support_pic, support_ang, del_flag, create_time, create_by, update_time, update_by from balance_support
+    </sql>
+
+    <select id="selectBalanceSupportList" parameterType="com.example.balance.domain.BalanceSupport" resultMap="BalanceSupportResult">
+        <include refid="selectBalanceSupportVo"/>
+        <where>del_flag='0'
+            <if test="balanceCode != null  and balanceCode != ''"> and balance_code = #{balanceCode}</if>
+            <if test="supportType != null  and supportType != ''"> and support_type = #{supportType}</if>
+            <if test="supportName != null  and supportName != ''"> and support_name like concat('%', #{supportName}, '%')</if>
+            <if test="supportPic != null  and supportPic != ''"> and support_pic = #{supportPic}</if>
+            <if test="supportAng != null  and supportAng != ''"> and support_ang = #{supportAng}</if>
+        </where>
+    </select>
+
+    <select id="selectBalanceSupportById" parameterType="long" resultMap="BalanceSupportResult">
+        <include refid="selectBalanceSupportVo"/>
+        where del_flag='0' and id = #{id}
+    </select>
+
+
+    <select id="selectBalanceSupportByBalanceCode" parameterType="string" resultMap="BalanceSupportResult">
+        <include refid="selectBalanceSupportVo"/>
+        where del_flag='0' and balance_code = #{balanceCode}
+    </select>
+    <insert id="insertBalanceSupport" parameterType="com.example.balance.domain.BalanceSupport" useGeneratedKeys="true" keyProperty="id">
+        insert into balance_support
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="balanceCode != null">balance_code,</if>
+            <if test="supportType != null">support_type,</if>
+            <if test="supportName != null">support_name,</if>
+            <if test="supportPic != null">support_pic,</if>
+            <if test="supportAng != null">support_ang,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="balanceCode != null">#{balanceCode},</if>
+            <if test="supportType != null">#{supportType},</if>
+            <if test="supportName != null">#{supportName},</if>
+            <if test="supportPic != null">#{supportPic},</if>
+            <if test="supportAng != null">#{supportAng},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBalanceSupport" parameterType="com.example.balance.domain.BalanceSupport">
+        update balance_support
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="balanceCode != null">balance_code = #{balanceCode},</if>
+            <if test="supportType != null">support_type = #{supportType},</if>
+            <if test="supportName != null">support_name = #{supportName},</if>
+            <if test="supportPic != null">support_pic = #{supportPic},</if>
+            <if test="supportAng != null">support_ang = #{supportAng},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBalanceSupportById" parameterType="long">
+        update balance_support set del_flag='2' where id = #{id}
+    </delete>
+
+    <delete id="deleteBalanceSupportByIds" parameterType="long">
+        update balance_support set del_flag='2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.balance.mapper.BalanceSizeMapper">
+
+    <resultMap type="com.example.balance.domain.BalanceSize" id="BalanceSizeResult">
+        <result property="id"    column="id"    />
+        <result property="balanceCode"    column="balance_code"    />
+        <result property="designerName"    column="designer_name"    />
+        <result property="designShape"    column="design_shape"    />
+        <result property="designTask"    column="design_task"    />
+        <result property="designReport"    column="design_report"    />
+        <result property="designPic"    column="design_pic"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="sizeX"    column="size_x"    />
+        <result property="sizeY"    column="size_y"    />
+        <result property="sizeZ"    column="size_z"    />
+    </resultMap>
+
+    <sql id="selectBalanceSizeVo">
+        select id, balance_code, designer_name, design_shape, design_task, design_report, design_pic, del_flag, create_time, create_by, update_time, update_by,size_x,size_y,size_z from balance_size
+    </sql>
+
+    <select id="selectBalanceSizeList" parameterType="com.example.balance.domain.BalanceSize" resultMap="BalanceSizeResult">
+        <include refid="selectBalanceSizeVo"/>
+        <where>del_flag='0'
+            <if test="balanceCode != null  and balanceCode != ''"> and balance_code = #{balanceCode}</if>
+            <if test="designerName != null  and designerName != ''"> and designer_name like concat('%', #{designerName}, '%')</if>
+            <if test="designShape != null  and designShape != ''"> and design_shape = #{designShape}</if>
+            <if test="designTask != null "> and design_task = #{designTask}</if>
+            <if test="designReport != null "> and design_report = #{designReport}</if>
+            <if test="designPic != null "> and design_pic = #{designPic}</if>
+        </where>
+    </select>
+
+    <select id="selectBalanceSizeById" parameterType="long" resultMap="BalanceSizeResult">
+        <include refid="selectBalanceSizeVo"/>
+        where del_flag='0' and id = #{id}
+    </select>
+
+
+    <select id="selectBalanceSizeByBalanceCode" parameterType="string" resultMap="BalanceSizeResult">
+        <include refid="selectBalanceSizeVo"/>
+        where del_flag='0' and balance_code = #{balanceCode}
+    </select>
+
+    <insert id="insertBalanceSize" parameterType="com.example.balance.domain.BalanceSize" useGeneratedKeys="true" keyProperty="id">
+        insert into balance_size
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="balanceCode != null">balance_code,</if>
+            <if test="designerName != null">designer_name,</if>
+            <if test="designShape != null">design_shape,</if>
+            <if test="designTask != null">design_task,</if>
+            <if test="designReport != null">design_report,</if>
+            <if test="designPic != null">design_pic,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="sizeX != null">size_x,</if>
+            <if test="sizeY != null">size_y,</if>
+            <if test="sizeZ != null">size_z,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="balanceCode != null">#{balanceCode},</if>
+            <if test="designerName != null">#{designerName},</if>
+            <if test="designShape != null">#{designShape},</if>
+            <if test="designTask != null">#{designTask},</if>
+            <if test="designReport != null">#{designReport},</if>
+            <if test="designPic != null">#{designPic},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="sizeX != null">#{sizeX},</if>
+            <if test="sizeY != null">#{sizeY},</if>
+            <if test="sizeZ != null">#{sizeZ},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBalanceSize" parameterType="com.example.balance.domain.BalanceSize">
+        update balance_size
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="balanceCode != null">balance_code = #{balanceCode},</if>
+            <if test="designerName != null">designer_name = #{designerName},</if>
+            <if test="designShape != null">design_shape = #{designShape},</if>
+            <if test="designTask != null">design_task = #{designTask},</if>
+            <if test="designReport != null">design_report = #{designReport},</if>
+            <if test="designPic != null">design_pic = #{designPic},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="sizeX != null">size_x = #{sizeX},</if>
+            <if test="sizeY != null">size_y = #{sizeY},</if>
+            <if test="sizeZ != null">size_z = #{sizeZ},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBalanceSizeById" parameterType="long">
+        update balance_size set del_flag='2' where id = #{id}
+    </delete>
+
+    <delete id="deleteBalanceSizeByIds" parameterType="long">
+        update balance_size set del_flag='2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>

@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.example.balance.mapper.BalanceHealthMapper">
+
+    <resultMap type="com.example.balance.domain.BalanceHealth" id="BalanceHealthResult">
+        <result property="id"    column="id"    />
+        <result property="inId"    column="in_id"    />
+        <result property="balanceCode"    column="balance_code"    />
+        <result property="healthType"    column="health_type"    />
+        <result property="healthCons"    column="health_cons"    />
+        <result property="healthState"    column="health_state"    />
+        <result property="healthReason"    column="health_reason"    />
+        <result property="delFlag"    column="del_flag"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+    </resultMap>
+
+    <sql id="selectBalanceHealthVo">
+        select id, in_id, balance_code, health_type, health_cons, health_state, health_reason, del_flag, create_time, create_by, update_time, update_by from balance_health
+    </sql>
+
+    <select id="selectBalanceHealthList" parameterType="com.example.balance.domain.BalanceHealth" resultMap="BalanceHealthResult">
+        <include refid="selectBalanceHealthVo"/>
+        <where>del_flag='0'
+            <if test="inId != null  and inId != ''"> and in_id = #{inId}</if>
+            <if test="balanceCode != null  and balanceCode != ''"> and balance_code = #{balanceCode}</if>
+            <if test="healthType != null  and healthType != ''"> and health_type = #{healthType}</if>
+            <if test="healthCons != null  and healthCons != ''"> and health_cons = #{healthCons}</if>
+            <if test="healthState != null  and healthState != ''"> and health_state = #{healthState}</if>
+            <if test="healthReason != null  and healthReason != ''"> and health_reason = #{healthReason}</if>
+        </where>
+    </select>
+
+    <select id="selectBalanceHealthLatest" parameterType="com.example.balance.domain.req.BalanceHealthListReq" resultType="com.example.balance.domain.BalanceHealthVO">
+
+        SELECT bir.id,
+               bir.evaluation,
+               bir.balance_code balanceCode,
+               bir.create_time createTime,
+               bi.balance_state balanceState,
+               bi.balance_name balanceName,
+               bh.health_state healthState
+        FROM balance_in_record bir
+                 JOIN (SELECT balance_code, MAX(create_time) AS latest_time
+                       FROM balance_in_record
+                       WHERE del_flag = '0'
+                       GROUP BY balance_code) latest_bir
+                      ON bir.balance_code = latest_bir.balance_code
+                          AND bir.create_time = latest_bir.latest_time
+        left join balance_info bi on bir.balance_code = bi.balance_code
+        left join balance_health bh on bir.id = bh.in_id
+        WHERE bir.del_flag = '0'
+
+    </select>
+
+
+    <select id="selectBalanceHealthById" parameterType="long" resultMap="BalanceHealthResult">
+        <include refid="selectBalanceHealthVo"/>
+        where del_flag='0' and id = #{id}
+    </select>
+
+    <select id="getInfoByBalance" resultMap="BalanceHealthResult">
+        <include refid="selectBalanceHealthVo"/>
+        where del_flag='0' and balance_code = #{balanceCode} and in_id = #{inId}
+    </select>
+
+    <insert id="insertBalanceHealth" parameterType="com.example.balance.domain.BalanceHealth" useGeneratedKeys="true" keyProperty="id">
+        insert into balance_health
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+
+            <if test="inId != null">in_id,</if>
+            <if test="balanceCode != null">balance_code,</if>
+            <if test="healthType != null">health_type,</if>
+            <if test="healthCons != null">health_cons,</if>
+            <if test="healthState != null">health_state,</if>
+            <if test="healthReason != null">health_reason,</if>
+            <if test="delFlag != null">del_flag,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+
+            <if test="inId != null">#{inId},</if>
+            <if test="balanceCode != null">#{balanceCode},</if>
+            <if test="healthType != null">#{healthType},</if>
+            <if test="healthCons != null">#{healthCons},</if>
+            <if test="healthState != null">#{healthState},</if>
+            <if test="healthReason != null">#{healthReason},</if>
+            <if test="delFlag != null">#{delFlag},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+        </trim>
+    </insert>
+
+    <update id="updateBalanceHealth" parameterType="com.example.balance.domain.BalanceHealth">
+        update balance_health
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="inId != null">in_id = #{inId},</if>
+            <if test="balanceCode != null">balance_code = #{balanceCode},</if>
+            <if test="healthType != null">health_type = #{healthType},</if>
+            <if test="healthCons != null">health_cons = #{healthCons},</if>
+            <if test="healthState != null">health_state = #{healthState},</if>
+            <if test="healthReason != null">health_reason = #{healthReason},</if>
+            <if test="delFlag != null">del_flag = #{delFlag},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBalanceHealthById" parameterType="long">
+        update balance_health set del_flag='2' where id = #{id}
+    </delete>
+
+    <delete id="deleteBalanceHealthByIds" parameterType="long">
+        update balance_health set del_flag='2' where id in
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
